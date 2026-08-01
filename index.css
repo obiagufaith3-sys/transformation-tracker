@@ -1,0 +1,514 @@
+/* ==========================================
+   1. COLOR SCHEMES & VARIABLES
+   ========================================== */
+:root,
+[data-theme="light"] {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --hover-bg: #f1f5f9;
+  --radius: 12px;
+}
+
+[data-theme="dark"] {
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --danger: #f87171;
+  --success: #4ade80;
+  --hover-bg: #334155;
+}
+
+[data-theme="custom"] {
+  /* Warm Sunset Theme */
+  --primary: #e11d48;
+  --primary-hover: #be123c;
+  --bg-color: #fff1f2;
+  --card-bg: #ffffff;
+  --text-main: #4c0519;
+  --text-muted: #9f1239;
+  --border-color: #fecdd3;
+  --danger: #e11d48;
+  --success: #16a34a;
+  --hover-bg: #ffe4e6;
+}
+
+/* ==========================================
+   2. BASE & LAYOUT STRUCTURE
+   ========================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px 12px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ==========================================
+   3. HEADER & TOP BAR
+   ========================================== */
+.app-header {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.app-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-main);
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  background: #dcfce7;
+  color: #166534;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .status-badge {
+  background: #166534;
+  color: #dcfce7;
+}
+
+/* ==========================================
+   4. NAVIGATION & DAY CONTROLS
+   ========================================== */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+
+.nav-btn {
+  background: var(--card-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.nav-btn:hover {
+  background: var(--hover-bg);
+}
+
+.jump-select {
+  flex: 1;
+  min-width: 110px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.today-btn {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.today-btn:hover {
+  opacity: 0.9;
+}
+
+/* ==========================================
+   5. DAY HEADER & FLAG MARKERS
+   ========================================== */
+.day-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.day-picker-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.day-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.date-picker {
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  outline: none;
+}
+
+.marker-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.marker-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.marker-group {
+  display: flex;
+  gap: 6px;
+}
+
+.marker-btn {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.2s;
+}
+
+.marker-btn:active {
+  transform: scale(0.96);
+}
+
+.marker-none {
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-main);
+}
+
+.marker-red {
+  border: none;
+  background: #fecdd3;
+  color: #9f1239;
+  font-weight: 700;
+}
+
+.marker-blue {
+  border: none;
+  background: #bfdbfe;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+.marker-btn.active {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+/* ==========================================
+   6. CARDS & CONTENT SECTIONS
+   ========================================== */
+.content-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 22px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: -8px;
+}
+
+/* ==========================================
+   7. INPUTS, FORMS & TEXTAREAS
+   ========================================== */
+.add-task-form {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: var(--card-bg);
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* ==========================================
+   8. BUTTONS & TASK LIST
+   ========================================== */
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.primary-btn {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.primary-btn:hover {
+  background: var(--primary-hover);
+}
+
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  transition: background-color 0.2s;
+}
+
+.task-item:hover {
+  background: var(--hover-bg);
+}
+
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-item.completed span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ==========================================
+   9. VOICE RECORDING SECTION
+   ========================================== */
+.recorder-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.record-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--danger);
+  color: white;
+}
+
+.record-btn:hover {
+  opacity: 0.9;
+}
+
+.record-icon {
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.timer {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-main);
+}
+
+.audio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+audio {
+  width: 100%;
+  height: 40px;
+}
+
+/* ==========================================
+   10. MOBILE RESPONSIVENESS (SMALL SCREENS)
+   ========================================== */
+@media (max-width: 480px) {
+  body {
+    padding: 8px 4px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .nav-controls {
+    justify-content: grid;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .jump-select {
+    grid-column: span 2;
+    order: -1;
+  }
+
+  .day-header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

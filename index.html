@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>120-Day Transformation Tracker</title>
+  <link rel="stylesheet" href="index.css" />
+  <!-- PWA Manifest Link -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+
+</head>
+<body>
+
+  <!-- ================= 1. FULL-SCREEN AUTH CONTAINER (Shown when logged out) ================= -->
+  <div id="auth-container" class="app-container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <section class="card" style="width: 100%; max-width: 400px; padding: 24px;">
+      <h2 style="text-align: center; margin-bottom: 8px;">Transformation Tracker</h2>
+      <p class="subtitle" style="text-align: center; margin-bottom: 20px;">Sign in or create an account to sync your 120-day journal across devices.</p>
+      
+      <div id="auth-error" style="color: #ef4444; margin-bottom: 12px; font-weight: 500; font-size: 0.9rem; text-align: center;"></div>
+      
+      <form id="auth-form" style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="yourname@example.com" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;" />
+        </div>
+        
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;" />
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+          <button type="submit" id="btn-submit-auth" class="btn primary-btn" style="width: 100%; padding: 10px;">Sign In</button>
+          <button type="button" id="btn-toggle-mode" class="btn" style="background: transparent; border: 1px solid currentColor; width: 100%; padding: 8px;">Need an account? Sign Up</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- ================= 2. DASHBOARD CONTAINER (Shown when logged in) ================= -->
+  <div id="dashboard-container" class="app-container" style="display: none;">
+    
+    <!-- Top Bar & Day Header -->
+    <header class="app-header">
+      
+      <!-- User Identity & Logout Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 4px 8px; background: rgba(0,0,0,0.05); border-radius: 6px;">
+        <span style="font-size: 0.85rem;">Logged in as: <strong id="user-email-display">---</strong></span>
+        <button id="btn-logout" class="btn" style="padding: 4px 10px; font-size: 0.8rem; background: #ef4444; color: white; border: none; border-radius: 4px;">Sign Out</button>
+      </div>
+
+      <!-- Top Title & Theme Controls -->
+      <div class="header-top">
+        <h1 class="app-title">Transformation Tracker</h1>
+        <div class="header-controls">
+          <select id="themeSelect" class="theme-select">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="custom">Sunset</option>
+          </select>
+          <span class="status-badge" id="syncStatus">Offline Ready</span>
+        </div>
+      </div>
+      
+      <!-- Day Navigation Row -->
+      <nav class="nav-controls">
+        <button id="prevDayBtn" class="nav-btn">&larr; Prev</button>
+        <select id="dayJumpSelect" class="jump-select">
+          <!-- Populated dynamically via JS -->
+        </select>
+        <button id="todayBtn" class="today-btn">Current Active Day</button>
+        <button id="nextDayBtn" class="nav-btn">Next &rarr;</button>
+      </nav>
+
+      <!-- Active Day Title, Date Picker, & Flag Markers -->
+      <div class="day-header-container">
+        <div class="day-picker-group">
+          <h2 id="currentDayTitle" class="day-title">Day 1</h2>
+          <input type="date" id="datePicker" class="date-picker" />
+        </div>
+
+        <!-- Flag Day Markers -->
+        <div class="marker-picker">
+          <span class="marker-label">Flag Day:</span>
+          <div class="marker-group">
+            <button type="button" class="marker-btn marker-none" data-color="none" title="Clear Tag">⚪ None</button>
+            <button type="button" class="marker-btn marker-red" data-color="red" title="Important / Tough Day">🔴 Red</button>
+            <button type="button" class="marker-btn marker-blue" data-color="blue" title="Happy / Memorable Day">🔵 Blue</button>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      
+      <!-- Daily Checklist Section -->
+      <section class="card checklist-card">
+        <div class="card-header">
+          <h3>Daily Checklist</h3>
+          <span class="progress-text" id="checklistProgress">0/0 completed</span>
+        </div>
+        
+        <!-- Add New Habit Input -->
+        <form id="addTaskForm" class="add-task-form">
+          <input 
+            type="text" 
+            id="newTaskInput" 
+            placeholder="Add a new habit or task..." 
+            autocomplete="off" 
+            required 
+          />
+          <button type="submit" class="btn primary-btn">+ Add</button>
+        </form>
+
+        <!-- Dynamic List of Checklist Items -->
+        <ul id="checklistItems" class="task-list">
+          <!-- Populated by JavaScript -->
+        </ul>
+      </section>
+
+      <!-- 3-Prompt Journal Section -->
+      <section class="card journal-card">
+        <h3>Daily Reflection</h3>
+        
+        <div class="input-group">
+          <label for="feelInput">How I feel today</label>
+          <textarea id="feelInput" rows="3" placeholder="Write about your mindset, emotions, or energy levels..."></textarea>
+        </div>
+
+        <div class="input-group">
+          <label for="avoidedInput">What I avoided</label>
+          <textarea id="avoidedInput" rows="3" placeholder="List temptations, distractions, or bad habits you dodged..."></textarea>
+        </div>
+
+        <div class="input-group">
+          <label for="achievedInput">What I achieved</label>
+          <textarea id="achievedInput" rows="3" placeholder="Highlight win(s) big or small..."></textarea>
+        </div>
+      </section>
+
+      <!-- Voice Note Recorder Section -->
+      <section class="card voice-card">
+        <h3>Voice Journal</h3>
+        <p class="subtitle">Record a quick audio entry if you don't feel like typing.</p>
+        
+        <div class="recorder-controls">
+          <button id="recordBtn" class="btn record-btn" type="button">
+            <span class="record-icon"></span>
+            <span id="recordBtnText">Start Recording</span>
+          </button>
+          <span id="recordingTimer" class="timer">00:00</span>
+        </div>
+
+        <!-- Audio Player List -->
+        <div id="audioList" class="audio-list">
+          <!-- Voice notes rendered dynamically -->
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Dexie.js for IndexedDB offline storage -->
+  <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+  <!-- Main JavaScript File -->
+  <script src="js/app.js"></script>
+
+</body>
+</html>

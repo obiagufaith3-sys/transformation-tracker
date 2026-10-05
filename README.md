@@ -19,5 +19,18 @@ A responsive Progressive Web App (PWA) built with vanilla JavaScript and Supabas
 To run this project locally on your machine:
 
 1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/obiagufaith3-sys/transformation-tracker.git](https://github.com/obiagufaith3-sys/transformation-tracker.git)
+   ```
+   git clone https://github.com/obiagufaith3-sys/transformation-tracker.git
+   ```
+2. **Open the project in your code editor (e.g., VS Code).**
+
+3. **Set Up Supabase:**
+
+-Create a free account on Supabase.
+
+-Create a new project and get your Project URL and Anon/Public Key from your project settings.
+
+-Add your credentials into your project configuration file where required.
+
+4. **Run a local server: Open index.html using a tool like the Live Server extension in VS Code to launch the app.**
+   
